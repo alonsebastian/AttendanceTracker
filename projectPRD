@@ -1,0 +1,62 @@
+Project Title: Office Attendance Tracker (Local-First) Type: Single Page Application (SPA) hosted on GitHub Pages Tech Stack: React, TypeScript, Vite, Tailwind CSS, shadcn/ui (Calendar), Zustand (State), date-fns.
+
+1. Core Concept
+A simple, aesthetically pleasing attendance tracker that lets users click dates on a calendar to toggle their "in-office" status. All data is persisted locally in the browser.
+
+2. Data Structure & State Management
+Store: Use zustand with the persist middleware to save data to localStorage.
+
+State Schema:
+
+attendance: A Set or Array of strings in YYYY-MM-DD format (e.g., ["2023-10-02", "2023-10-05"]). This simple format makes date math easy.
+
+actions: toggleDate(date: string), isPresent(date: string).
+
+3. UI Requirements
+A. The Calendar View (Center Stage)
+
+Use the shadcn/ui Calendar component.
+
+Display a full month view.
+
+Interactivity: Clicking a date toggles it between "selected" (green circle/background) and "unselected" (default).
+
+Navigation: Standard "Next Month" / "Previous Month" arrows to cycle through the year.
+
+Visuals: Ensure the current day is visually distinct (e.g., bold font) even if not selected.
+
+B. The Dashboard (Stats Panel)
+
+Metric 1: Current Month Count: Display specific count for the currently viewed month (e.g., "October Attendance: 8 days").
+
+Metric 2: Rolling 13-Week Total: Calculate the total distinct days attended in the last 91 days (13 weeks) from today. Use date-fns to determine the start of the 13-week window dynamically.
+
+C. Data Safety (The "Backup" Button)
+
+Since localStorage can be cleared, include a "Settings" or "Data" section.
+
+Export: A button that downloads a file named attendance_backup.json containing the raw date list.
+
+Import: A simple file input to upload a .json file and restore the state.
+
+4. Functional Requirements
+Persistence: On app load, zustand must hydrate the store from localStorage. The user should see their previous data immediately.
+
+Date Logic: Ensure timezone safety. Store dates as "local" strings (YYYY-MM-DD) rather than UTC timestamps to avoid "off-by-one-day" errors when the user opens the app late at night.
+
+Responsiveness:
+
+Desktop: Side-by-side layout (Calendar on left, Stats on right).
+
+Mobile: Stacked layout (Stats on top, Calendar below). Touch targets for dates must be at least 44x44px.
+
+5. Step-by-Step Implementation Plan (for Agent)
+Scaffold: Initialize React+Vite+TS project and install Tailwind + shadcn/ui.
+
+State: Create the useAttendanceStore with persistence.
+
+UI Components: Add the Calendar component and create a wrapper to handle the selected prop based on our store data.
+
+Logic: Implement the "13-week" calculator using subWeeks(new Date(), 13).
+
+Polish: Add the Export/Import JSON buttons.

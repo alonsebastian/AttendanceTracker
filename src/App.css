@@ -1,0 +1,31 @@
+/* Custom calendar styling for attendance tracking */
+
+/* Green highlight for attendance days */
+.attendance-calendar .attendance-selected {
+  background-color: #22c55e !important;
+  color: white !important;
+}
+
+.attendance-calendar .attendance-selected:hover {
+  background-color: #16a34a !important;
+  color: white !important;
+}
+
+/* Make today visually distinct - bold with blue ring */
+.attendance-calendar .rdp-day_button[aria-current="date"] {
+  font-weight: 700;
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+/* Ensure minimum touch target size of 44x44px */
+.attendance-calendar .rdp-day_button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.attendance-calendar .rdp-month_caption {
+  margin-bottom: 1rem;
+}
