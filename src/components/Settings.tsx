@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, Upload } from 'lucide-react'
 import { useAttendanceStore } from '@/store/attendanceStore'
+import { isValid, parseISO } from 'date-fns'
+import { formatDateKey } from '@/lib/dateUtils'
 
 export default function Settings() {
   const { dates, replaceAll, mergeWith } = useAttendanceStore()
@@ -25,11 +27,26 @@ export default function Settings() {
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Security: Limit file size to 5MB to prevent DoS
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+    if (file.size > MAX_FILE_SIZE) {
+      alert('File too large. Maximum size is 5MB.')
+      return
+    }
+
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string
-        const importedDates = JSON.parse(content)
+
+        // Security: Parse with prototype pollution protection
+        const importedDates = JSON.parse(content, (key, value) => {
+          // Block prototype pollution attempts
+          if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+            return undefined
+          }
+          return value
+        })
 
         // Validate: must be an array of strings in YYYY-MM-DD format
         if (!Array.isArray(importedDates)) {
@@ -37,13 +54,36 @@ export default function Settings() {
           return
         }
 
+        // Security: Additional check for malicious properties
+        if (importedDates.hasOwnProperty('__proto__') ||
+            importedDates.hasOwnProperty('constructor')) {
+          alert('Invalid file: Malicious content detected')
+          return
+        }
+
+        // Security: Limit array size to prevent memory exhaustion (~27 years of daily attendance)
+        const MAX_DATES = 10000
+        if (importedDates.length > MAX_DATES) {
+          alert(`Too many dates. Maximum allowed is ${MAX_DATES}.`)
+          return
+        }
+
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-        const allValid = importedDates.every(
-          (d) => typeof d === 'string' && dateRegex.test(d)
-        )
+
+        // Security: Validate both format AND semantic validity of dates
+        const allValid = importedDates.every((d) => {
+          if (typeof d !== 'string' || !dateRegex.test(d)) return false
+
+          // Validate that it's a real date (prevents dates like 2025-13-45)
+          const date = parseISO(d)
+          if (!isValid(date)) return false
+
+          // Ensure round-trip consistency
+          return formatDateKey(date) === d
+        })
 
         if (!allValid) {
-          alert('Invalid file: All dates must be in YYYY-MM-DD format')
+          alert('Invalid file: All dates must be valid dates in YYYY-MM-DD format')
           return
         }
 
@@ -60,7 +100,9 @@ export default function Settings() {
 
         alert(`Successfully imported ${importedDates.length} dates!`)
       } catch (error) {
-        alert('Error reading file: ' + (error as Error).message)
+        // Security: Don't leak implementation details in error messages
+        console.error('Import error:', error)
+        alert('Error reading file. Please ensure it is a valid JSON backup file.')
       }
     }
 
