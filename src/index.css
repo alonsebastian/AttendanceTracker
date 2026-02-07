@@ -47,10 +47,6 @@
   --ring: 0 0% 83.1%;
 }
 
-* {
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-}
-
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
