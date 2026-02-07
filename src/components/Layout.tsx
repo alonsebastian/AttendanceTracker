@@ -13,18 +13,22 @@ export default function Layout() {
           Office Attendance Tracker
         </h1>
 
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Mobile: Stats first, Calendar second */}
-          {/* Desktop: Calendar left, Stats right */}
-          <div className="order-2 md:order-1 flex-1">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-8">
+          {/* Mobile: Calendar (order-1), Desktop: Left column (row-span-2) */}
+          <div className="order-1 md:row-span-2">
             <AttendanceCalendar
               displayMonth={displayMonth}
               onMonthChange={setDisplayMonth}
             />
           </div>
 
-          <div className="order-1 md:order-2 flex-1 space-y-6">
+          {/* Mobile: Dashboard (order-2), Desktop: Right top */}
+          <div className="order-2">
             <Dashboard displayMonth={displayMonth} />
+          </div>
+
+          {/* Mobile: Settings (order-3), Desktop: Right bottom */}
+          <div className="order-3">
             <Settings />
           </div>
         </div>
