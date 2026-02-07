@@ -23,7 +23,7 @@ export default function AttendanceCalendar({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-4">
+    <div className="bg-card rounded-xl shadow-sm border border-border p-4">
       <Calendar
         mode="multiple"
         selected={selectedDates}
