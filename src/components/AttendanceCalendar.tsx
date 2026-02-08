@@ -1,26 +1,33 @@
-import { Calendar } from '@/components/ui/calendar'
-import { useAttendanceStore } from '@/store/attendanceStore'
-import { formatDateKey, parseDateKey } from '@/lib/dateUtils'
+import { Calendar } from '@/components/ui/calendar';
+import { useAttendanceStore } from '@/store/attendanceStore';
+import { formatDateKey, parseDateKey } from '@/lib/dateUtils';
+import { toast } from 'sonner';
 
 interface AttendanceCalendarProps {
-  displayMonth: Date
-  onMonthChange: (date: Date) => void
+  displayMonth: Date;
+  onMonthChange: (date: Date) => void;
 }
 
 export default function AttendanceCalendar({
   displayMonth,
   onMonthChange,
 }: AttendanceCalendarProps) {
-  const { dates, toggleDate } = useAttendanceStore()
+  const { dates, toggleDate } = useAttendanceStore();
 
   // Convert string dates to Date objects for react-day-picker
-  const selectedDates = dates.map(parseDateKey)
+  const selectedDates = dates.map(parseDateKey);
 
-  const handleDayClick = (day: Date | undefined) => {
+  const handleDayClick = async (day: Date | undefined) => {
     if (day) {
-      toggleDate(formatDateKey(day))
+      try {
+        await toggleDate(formatDateKey(day));
+      } catch (error) {
+        // Error toast is shown automatically (store already rolled back)
+        toast.error('Failed to update attendance. Please try again.');
+        console.error('Toggle error:', error);
+      }
     }
-  }
+  };
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4">
@@ -36,5 +43,5 @@ export default function AttendanceCalendar({
         className="attendance-calendar"
       />
     </div>
-  )
+  );
 }

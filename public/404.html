@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // Store the requested path and redirect to index.html
+      // This allows client-side routing to work with direct navigation
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+
+        if (redirect && redirect !== location.href) {
+          // If there was a redirect stored, use it
+          history.replaceState(null, null, redirect);
+        } else {
+          // Otherwise, store current path for after index.html loads
+          sessionStorage.setItem('githubPagesRedirect',
+            location.pathname.slice(0, -1) + location.search + location.hash
+          );
+          // Redirect to base URL
+          location.replace('/attendanceTracker/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- GitHub Pages SPA redirect -->
+  </body>
+</html>
