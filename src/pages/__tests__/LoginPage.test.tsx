@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { LoginPage } from '../LoginPage';
@@ -189,12 +189,16 @@ describe('LoginPage', () => {
   });
 
   describe('Validation', () => {
-    it.skip('should validate email format', async () => {
+    it('should validate email format', async () => {
       const user = userEvent.setup();
       renderLoginPage();
 
-      const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/^password$/i);
+      const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
+      const passwordInput = screen.getByLabelText(/^password$/i) as HTMLInputElement;
+      const form = emailInput.closest('form') as HTMLFormElement;
+
+      // Disable HTML5 validation to allow React validation to run
+      form.noValidate = true;
 
       await user.clear(emailInput);
       await user.type(emailInput, 'invalid-email');
@@ -211,12 +215,16 @@ describe('LoginPage', () => {
       expect(mockAuth.signIn).not.toHaveBeenCalled();
     });
 
-    it.skip('should validate password length', async () => {
+    it('should validate password length', async () => {
       const user = userEvent.setup();
       renderLoginPage();
 
-      const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/^password$/i);
+      const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
+      const passwordInput = screen.getByLabelText(/^password$/i) as HTMLInputElement;
+      const form = emailInput.closest('form') as HTMLFormElement;
+
+      // Disable HTML5 validation to allow React validation to run
+      form.noValidate = true;
 
       await user.clear(emailInput);
       await user.type(emailInput, 'test@example.com');
@@ -251,21 +259,25 @@ describe('LoginPage', () => {
       });
     });
 
-    it.skip('should show error when email is empty', async () => {
+    it('should show error when email is empty', async () => {
       const user = userEvent.setup();
       renderLoginPage();
 
       const forgotButton = screen.getByText(/forgot password/i);
-      await user.click(forgotButton);
+
+      // Wrap in act to ensure state updates are flushed
+      await act(async () => {
+        await user.click(forgotButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText('Please enter your email address.')).toBeInTheDocument();
-      });
+      }, { timeout: 3000 });
 
       expect(mockAuth.resetPassword).not.toHaveBeenCalled();
     });
 
-    it.skip('should validate email format for password reset', async () => {
+    it('should validate email format for password reset', async () => {
       const user = userEvent.setup();
       renderLoginPage();
 
@@ -274,11 +286,15 @@ describe('LoginPage', () => {
       await user.type(emailInput, 'invalid-email');
 
       const forgotButton = screen.getByText(/forgot password/i);
-      await user.click(forgotButton);
+
+      // Wrap in act to ensure state updates are flushed
+      await act(async () => {
+        await user.click(forgotButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument();
-      });
+      }, { timeout: 3000 });
 
       expect(mockAuth.resetPassword).not.toHaveBeenCalled();
     });
