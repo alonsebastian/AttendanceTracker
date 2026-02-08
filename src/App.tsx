@@ -35,7 +35,7 @@ function RedirectHandler() {
 function App() {
   return (
     <ServiceProvider auth={auth} attendance={attendance}>
-      <BrowserRouter basename="/attendanceTracker">
+      <BrowserRouter basename="/AttendanceTracker">
         <RedirectHandler />
         <Routes>
           {/* Public route */}
