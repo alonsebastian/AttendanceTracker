@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../services/ServiceContext';
+import { useThemeStore } from '../store/themeStore';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { toast } from 'sonner';
+import ThemeToggle from '../components/ThemeToggle';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -18,9 +20,29 @@ export function LoginPage() {
 
   const auth = useAuth();
   const navigate = useNavigate();
+  const { theme } = useThemeStore();
 
   const isSignIn = mode === 'signin';
   const isSignUp = mode === 'signup';
+
+  // Apply dark class to document root
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  // Swap favicons when theme changes
+  useEffect(() => {
+    const suffix = theme === 'dark' ? 'dark' : 'light';
+    const base = import.meta.env.BASE_URL;
+    document.getElementById('favicon-32')?.setAttribute('href', `${base}favicon-${suffix}-32.png`);
+    document.getElementById('favicon-16')?.setAttribute('href', `${base}favicon-${suffix}-16.png`);
+    document.getElementById('apple-touch-icon')?.setAttribute('href', `${base}apple-touch-icon-${suffix}.png`);
+  }, [theme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,18 +131,21 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-6">
           <img
             src={`${import.meta.env.BASE_URL}logo-light.png`}
             alt="OATs - Office Attendance Tracker"
-            className="h-14 w-auto dark:hidden"
+            className="h-28 w-auto dark:hidden"
           />
           <img
             src={`${import.meta.env.BASE_URL}logo-dark.png`}
             alt="OATs - Office Attendance Tracker"
-            className="h-14 w-auto hidden dark:block"
+            className="h-28 w-auto hidden dark:block"
           />
         </div>
       <Card className="w-full max-w-md">
