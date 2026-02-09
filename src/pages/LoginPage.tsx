@@ -110,6 +110,19 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md">
+        <div className="flex justify-center mb-6">
+          <img
+            src={`${import.meta.env.BASE_URL}logo-light.png`}
+            alt="OATs - Office Attendance Tracker"
+            className="h-14 w-auto dark:hidden"
+          />
+          <img
+            src={`${import.meta.env.BASE_URL}logo-dark.png`}
+            alt="OATs - Office Attendance Tracker"
+            className="h-14 w-auto hidden dark:block"
+          />
+        </div>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{isSignIn ? 'Sign In' : 'Sign Up'}</CardTitle>
@@ -183,7 +196,7 @@ export function LoginPage() {
 
             {/* Reset email sent message */}
             {resetEmailSent && (
-              <div className="text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md p-3">
+              <div className="text-sm text-accent-foreground bg-accent/20 border border-accent/30 rounded-md p-3">
                 Password reset email sent! Please check your inbox.
               </div>
             )}
@@ -220,6 +233,7 @@ export function LoginPage() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

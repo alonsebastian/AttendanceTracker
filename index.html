@@ -2,9 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               img-src 'self' data:;
+               connect-src 'self' https://keyttaohdfmdvnxnsmaf.supabase.co;
+               font-src 'self';
+               frame-ancestors 'none';
+               base-uri 'self';
+               form-action 'self';" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32.png" id="favicon-32" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-light-16.png" id="favicon-16" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-light.png" id="apple-touch-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Office Attendance Tracker</title>
+    <title>OATs - Office Attendance Tracker</title>
   </head>
   <body>
     <div id="root"></div>

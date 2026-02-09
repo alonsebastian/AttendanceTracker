@@ -31,13 +31,24 @@ export default function Layout() {
     }
   }, [theme]);
 
+  // Swap favicons when theme changes
+  useEffect(() => {
+    const suffix = theme === 'dark' ? 'dark' : 'light';
+    const base = import.meta.env.BASE_URL;
+    document.getElementById('favicon-32')?.setAttribute('href', `${base}favicon-${suffix}-32.png`);
+    document.getElementById('favicon-16')?.setAttribute('href', `${base}favicon-${suffix}-16.png`);
+    document.getElementById('apple-touch-icon')?.setAttribute('href', `${base}apple-touch-icon-${suffix}.png`);
+  }, [theme]);
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-foreground">
-            Office Attendance Tracker
-          </h1>
+          <img
+            src={`${import.meta.env.BASE_URL}${theme === 'dark' ? 'logo-dark.png' : 'logo-light.png'}`}
+            alt="OATs - Office Attendance Tracker"
+            className="h-12 md:h-14 w-auto"
+          />
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <UserMenu />

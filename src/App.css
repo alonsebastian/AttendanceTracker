@@ -9,7 +9,7 @@
 .attendance-calendar .rdp-weekday {
   flex: 1;
   text-align: center;
-  color: hsl(0 0% 45.1%);
+  color: hsl(var(--muted-foreground));
   font-size: 0.8rem;
   font-weight: normal;
 }
@@ -20,22 +20,37 @@
   margin-top: 0.5rem;
 }
 
-/* Green highlight for attendance days */
+/* Amber highlight for attendance days (light mode) */
 .attendance-calendar .attendance-selected {
-  background-color: #22c55e !important;
+  background-color: #C4922A !important;
   color: white !important;
 }
 
 .attendance-calendar .attendance-selected:hover {
-  background-color: #16a34a !important;
+  background-color: #A67A1E !important;
   color: white !important;
 }
 
-/* Make today visually distinct - bold with blue ring */
+/* Dark mode: gold highlight with dark text for contrast */
+.dark .attendance-calendar .attendance-selected {
+  background-color: #D4A84B !important;
+  color: #3D2B1F !important;
+}
+
+.dark .attendance-calendar .attendance-selected:hover {
+  background-color: #C4922A !important;
+  color: #3D2B1F !important;
+}
+
+/* Make today visually distinct - bold with sage green ring */
 .attendance-calendar .rdp-day_button[aria-current="date"] {
   font-weight: 700;
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #8B9A6B;
   outline-offset: -2px;
+}
+
+.dark .attendance-calendar .rdp-day_button[aria-current="date"] {
+  outline-color: #7A8A5B;
 }
 
 /* Ensure minimum touch target size of 44x44px */
