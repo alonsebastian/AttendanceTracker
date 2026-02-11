@@ -25,7 +25,12 @@ function RedirectHandler() {
     const redirect = sessionStorage.getItem('githubPagesRedirect');
     if (redirect) {
       sessionStorage.removeItem('githubPagesRedirect');
-      navigate(redirect, { replace: true });
+      // Redirect should be relative to basename, but strip it defensively
+      const basename = '/AttendanceTracker';
+      const relativePath = redirect.startsWith(basename)
+        ? redirect.substring(basename.length) || '/'
+        : redirect;
+      navigate(relativePath, { replace: true });
     }
   }, [navigate]);
 

@@ -15,9 +15,18 @@
           // If there was a redirect stored, use it
           history.replaceState(null, null, redirect);
         } else {
-          // Otherwise, store current path for after index.html loads
+          // Store the path relative to the base (strip /AttendanceTracker prefix)
+          var pathname = location.pathname;
+          var basePath = '/AttendanceTracker';
+          var relativePath = pathname.startsWith(basePath)
+            ? pathname.substring(basePath.length)
+            : pathname;
+          // Ensure we have at least '/'
+          if (!relativePath || relativePath === '') {
+            relativePath = '/';
+          }
           sessionStorage.setItem('githubPagesRedirect',
-            location.pathname.slice(0, -1) + location.search + location.hash
+            relativePath + location.search + location.hash
           );
           // Redirect to base URL
           location.replace('/AttendanceTracker/');
